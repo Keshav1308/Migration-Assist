@@ -1,0 +1,6 @@
+let Splunk_Incident = Splunk_Notable_Events_CL | extend Origin_Time= extract(“([0-9]{2}/[0-9]{2}/[0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2})”, 0, orig_raw_s ) | extend Title = search_name_s
+| summarize count by Title, bin(TimeGenerated, 1d);
+SecurityIncident
+| summarize count by Title, bin(TimeGenerated, 1d)
+| join on Splunk_Incident on Title
+| summarize count by Title, bin(TimeGenerated, 1d)
