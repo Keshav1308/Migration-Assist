@@ -1,0 +1,66 @@
+## Inspiration
+
+While migrating SOC from the Splunk to sentinel, we need to work on few important things. We need to make sure that both the tools are generating exactly same number of the environment and collecting same amount of data.  In most of the cases we need to migrate the Splunk use cases to Azure Sentinel Rule  template. 
+
+Once the rule template is deployed we need to work on the finetuning.  During finetuning we need to compare the incident generated in the Splunk as well as the incidents generated in the Azure Sentinel. 
+
+Idea here is to create workbooks that can do the comparison of the data and help migrating team in completing the finetuning. 
+
+## What it does
+This will have workbooks that will :- 
+- Compare the incidents generated in the Splunk and incident generated in the Azure Sentinel. 
+- Compare the amount of data collected for each data type in Azure Sentinel as well in Splunk. 
+- Number of incident generated for each Entity. 
+- Number of incident generated for each Datatype. 
+
+## How we built it
+We have used the existing tool 'Azure Sentinel Add-On for Splunk' https://splunkbase.splunk.com/app/5312/#/details  for inserting the Splunk indexes to the Azure Sentinel. 
+
+- Data from the Splunk will be stored in table Splunk_Audit_Events_CL .
+
+- Develop the correlation search query that do the comparison of the data like 
+
+let Splunk_Incident = Splunk_Notable_Events_CL | extend Origin_Time= extract(“([0-9]{2}/[0-9]{2}/[0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2})”, 0, orig_raw_s ) | extend Title = search_name_s
+| summarize count by Title, bin(TimeGenerated, 1d);
+SecurityIncident
+| summarize count by Title, bin(TimeGenerated, 1d)
+| join on Splunk_Incident on Title
+| summarize count by Title, bin(TimeGenerated, 1d)
+
+
+
+This workbook can be implemented only for the limited time while we are doing POC, Testing. Once the deployment is completed this can be removed. 
+
+## Challenges we ran into
+
+Its hard to get the test Splunk environment where we can configure 'Azure Sentinel Add-On for Splunk'
+
+## Accomplishments that we're proud of
+This will help in migrating the Splunk to Azure Sentinel. 
+
+## What we learned
+- Splunk searches. 
+- Approach on how to migrate Splunk to Azure Sentinel.  
+
+## What's next for Migration-Assist ! Helping migration from Splunk to Sentinel
+
+ Initially we are targeting very few Workbooks like :- 
+- Compare the incidents generated in the Splunk and incident generated in the Azure Sentinel. 
+- Compare the amount of data collected for each data type in Azure Sentinel as well in Splunk. 
+- Number of incident generated for each Entity. 
+- Number of incident generated for each Datatype. 
+
+But later lot of other scenarios can be covered. 
+
+
+
+Sample KQL Query  for doing the incidnet comparisions :- 
+
+
+
+let Splunk_Incident = Splunk_Notable_Events_CL | extend Origin_Time= extract(“([0-9]{2}/[0-9]{2}/[0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2})”, 0, orig_raw_s ) | extend Title = search_name_s
+| summarize count by Title, bin(TimeGenerated, 1d);
+SecurityIncident
+| summarize count by Title, bin(TimeGenerated, 1d)
+| join on Splunk_Incident on Title
+| summarize count by Title, bin(TimeGenerated, 1d)
