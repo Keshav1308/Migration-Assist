@@ -1,4 +1,4 @@
-# Migration-Assist
+# [Azure Sentinel Hackathon 2021]Migration-Assist
 
 Migrating Splunk to sentinel is a bit tedious and complex process. In most of the environment Splunk is stable and running for more than 5-6 years. While doing the migration expectation is to make Azure Sentinel work the way Splunk works.
 
