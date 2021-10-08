@@ -23,6 +23,7 @@ Number of incident generated for each Datatype.
 
 
 How we built it
+----------------------
 We have used the existing tool 'Azure Sentinel Add-On for Splunk' . https://splunkbase.splunk.com/app/5312/#/details
 for inserting the Splunk indexes to the Azure Sentinel.
 
