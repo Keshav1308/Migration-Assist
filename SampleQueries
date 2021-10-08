@@ -1,0 +1,23 @@
+For my scenario, I am collecting data for few Splunk usecases and below are the custom tables where data is stored :- 
+
+Splunk_audit_CL	
+Splunk_CL_audit_CL
+Splunk_CL_Wind10_Alert_CL
+Splunk_Error_CL
+Splunk_Error_RTM_CL
+Splunk_Win10_CL
+
+
+
+//Queries for counting the alert generated in the Splunk environment 
+search "Splunk_" | summarize  Total_Alerts_Splunk = count() by $table
+//End of query
+
+
+
+
+//Comparing one specific type of incidents. 
+Splunk_Win10_CL | extend Title = Type
+| join SecurityIncident on Title
+| summarize count() by Title
+//End of query
