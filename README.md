@@ -20,3 +20,18 @@ Compare the incidents generated in the Splunk and incident generated in the Azur
 Compare the amount of data collected for each data type in Azure Sentinel as well in Splunk.
 Number of incident generated for each Entity.
 Number of incident generated for each Datatype.
+
+
+How we built it
+We have used the existing tool 'Azure Sentinel Add-On for Splunk' . https://splunkbase.splunk.com/app/5312/#/details
+for inserting the Splunk indexes to the Azure Sentinel.
+
+Data from the Splunk will be stored in table Splunk_Audit_Events_CL .
+
+Develop the correlation search query that do the comparison of the data like
+
+let Splunk_Incident = Splunk_Notable_Events_CL | extend Origin_Time= extract(“([0-9]{2}/[0-9]{2}/[0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2})”, 0, orig_raw_s ) | extend Title = search_name_s | summarize count by Title, bin(TimeGenerated, 1d); SecurityIncident | summarize count by Title, bin(TimeGenerated, 1d) | join on Splunk_Incident on Title | summarize count by Title, bin(TimeGenerated, 1d)
+
+and many other queries.
+
+This workbook can be implemented only for the limited time while we are doing Validation and Testing. Once the deployment is completed this can be removed.
